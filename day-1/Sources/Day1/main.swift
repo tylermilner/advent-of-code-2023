@@ -43,8 +43,8 @@ let day1 = Day1()
 let answerExample = day1.output(for: .example)
 print("Example: \(answerExample)")
 
-//let answerPuzzle1 = day1.output(for: .puzzle1)
-//print("Puzzle 1: \(answerExample)")
+let answerPuzzle1 = day1.output(for: .puzzle1)
+print("Puzzle 1: \(answerPuzzle1)")
 
 //let answerPuzzle2 = day1.output(for: .puzzle2)
-//print("Puzzle 2: \(answerExample)")
+//print("Puzzle 2: \(answerPuzzle2)")
