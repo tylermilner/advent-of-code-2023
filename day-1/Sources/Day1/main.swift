@@ -12,7 +12,27 @@ struct Day1 {
         do {
             let lines = try input.fileLines
             
-            return ""
+            var values = [Int]()
+            
+            for line in lines {
+                guard let firstNumber = (line.first { $0.isNumber }) else {
+                    fatalError("First number not found in line: '\(line)'")
+                }
+                guard let lastNumber = (line.last { $0.isNumber }) else {
+                    fatalError("Last number not found in line: '\(line)'")
+                }
+                
+                let numberString = "\(firstNumber)\(lastNumber)"
+                guard let number = Int(numberString) else {
+                    fatalError("Unable to create number from '\(numberString)'")
+                }
+                
+                values.append(number)
+            }
+            
+            let finalValue = values.reduce(0, +)
+            
+            return String(finalValue)
         } catch {
             fatalError(error.localizedDescription)
         }

@@ -10,6 +10,6 @@ final class Day1Tests: XCTestCase {
         let output = day1.output(for: .example)
         
         // Assert
-        XCTAssertEqual(output, "")
+        XCTAssertEqual(output, "142")
     }
 }
