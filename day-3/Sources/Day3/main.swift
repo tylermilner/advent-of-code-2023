@@ -31,36 +31,6 @@ struct PartNumberComponent {
     }
 }
 
-//struct Symbol {
-//    let symbol: Character
-//    let rowIndex: Int
-//    let columnIndex: Int
-//    
-//    var possiblePartNumberCoordinates: [(Int, Int)] {
-//        let previousRow = rowIndex - 1
-//        let nextRow = rowIndex + 1
-//        let previousColumn = columnIndex - 1
-//        let nextColumn = columnIndex + 1
-//        
-//        print("Possible part number coordinates starting at row \(previousRow) to row \(nextRow) and column \(previousColumn) to column \(nextColumn)")
-//        
-//        var coordinates: [(Int, Int)] = []
-//        
-//        for rowIndex in previousRow...nextRow {
-//            for columnIndex in previousColumn...nextColumn {
-//                let coordinate = (rowIndex, columnIndex)
-//                
-//                // Ignore coordinate for self
-//                guard coordinate != (self.rowIndex, self.columnIndex) else { continue }
-//                
-//                coordinates.append((rowIndex, columnIndex))
-//            }
-//        }
-//        
-//        return coordinates
-//    }
-//}
-
 struct Day3 {
     
     func puzzleOneOutput(for input: Input) throws -> String {
@@ -68,26 +38,6 @@ struct Day3 {
         
         // Convert row to a character array so that we can access it using subscripts
         let rows = lines.map { [Character]($0) }
-        
-        // Get the list of symbols, which will include their adjacent positions, so that we will know which part numbers need to be included
-//        var symbols: [Symbol] = []
-//        
-//        for rowIndex in 0..<rows.count {
-//            let row = rows[rowIndex]
-//            
-//            for columnIndex in 0..<row.count {
-//                let char = row[columnIndex]
-//                print("Checking '\(char)'...")
-//                
-//                if !char.isNumber && char != "." {
-//                    let symbol = Symbol(symbol: char, rowIndex: rowIndex, columnIndex: columnIndex)
-//                    symbols.append(symbol)
-//                    
-//                    print("Found symbol: '\(char)' at (\(rowIndex),\(columnIndex))")
-//                    print("Possible part number coordinates: \(symbol.possiblePartNumberCoordinates)")
-//                }
-//            }
-//        }
         
         // Get the list of potential part numbers
         var partNumbers: [PartNumber] = []
