@@ -1,14 +1,53 @@
 import AoCUtilities
 import Foundation
 
+struct Card {
+    let number: Int
+    let winningNumbers: [Int]
+    let numbers: [Int]
+    
+    var points: Int {
+        var points = 0
+        
+        for number in numbers {
+            if winningNumbers.contains(number) {
+                points += 1
+            }
+        }
+        
+        return Int(pow(Double(2), Double(points - 1)))
+    }
+}
+
 struct Day4 {
     
     func puzzleOneOutput(for input: Input) throws -> String {
         let lines = try input.fileLines
         
-        // TODO: Add puzzle logic
+        // Parse cards from the input
+        var cards: [Card] = []
         
-        return ""
+        for line in lines {
+            let cardComponents = line.components(separatedBy: ":")
+            guard cardComponents.count == 2 else { fatalError("Unable to determine card components") }
+            
+            let cardNumberComponents = cardComponents[0].components(separatedBy: " ")
+            guard let cardNumber = Int(cardNumberComponents.last!) else { fatalError("Unable to parse card number") }
+            
+            let numberComponents = cardComponents[1].components(separatedBy: "|")
+            guard numberComponents.count == 2 else { fatalError("Unable to determine number components") }
+            
+            let winningNumbers = numberComponents[0].components(separatedBy: " ").compactMap(Int.init)
+            let cardNumbers = numberComponents[1].components(separatedBy: " ").compactMap(Int.init)
+            
+            let card = Card(number: cardNumber, winningNumbers: winningNumbers, numbers: cardNumbers)
+            cards.append(card)
+        }
+        
+        // Calculate points
+        let sum = cards.map(\.points).reduce(0, +)
+        
+        return "\(sum)"
     }
     
     func puzzleTwoOutput(for input: Input) throws -> String {
