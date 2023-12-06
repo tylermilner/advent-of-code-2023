@@ -6,12 +6,14 @@ struct Map {
     let sourceRangeStart: Int
     let rangeLength: Int
     
-    var destinationRange: [Int] {
-        range(startingAt: destinationRangeStart, length: rangeLength)
+    var destinationRange: Range<Int> {
+        let destinationRangeEnd = destinationRangeStart + rangeLength
+        return destinationRangeStart..<destinationRangeEnd
     }
     
-    var sourceRange: [Int] {
-        range(startingAt: sourceRangeStart, length: rangeLength)
+    var sourceRange: Range<Int> {
+        let sourceRangeEnd = sourceRangeStart + rangeLength
+        return sourceRangeStart..<sourceRangeEnd
     }
     
     init(inputLine: String) {
@@ -22,19 +24,12 @@ struct Map {
         self.rangeLength = Int(mapComponents[2])!
     }
     
-    func mappedValue(for initialValue: Int) -> Int? {
-        guard let index = sourceRange.firstIndex(of: initialValue) else { return nil }
-        return destinationRange[index]
-    }
-    
-    private func range(startingAt start: Int, length: Int) -> [Int] {
-        var range: [Int] = []
+    func mappedValue(for initialValue: Int) -> Int? {        
+        guard sourceRange.contains(initialValue) else { return nil }
         
-        for number in start..<(start + length) {
-            range.append(number)
-        }
+        let offset = initialValue - sourceRangeStart
         
-        return range
+        return destinationRangeStart + offset
     }
 }
 
