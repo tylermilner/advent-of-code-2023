@@ -38,8 +38,32 @@ struct Day5 {
     func puzzleOneOutput(for input: Input) throws -> String {
         let lines = try input.fileLines
         
+        // Parse seeds
+        let firstLine = lines[0]
+        guard firstLine.starts(with: "seeds:") else { fatalError("Unable to parse seeds") }
+        let seeds = firstLine.components(separatedBy: " ").dropFirst().compactMap(Int.init)
+        
+        // Get the lowest value
+        let lowestValue = findLowestLocationForSeeds(seeds, in: lines)
+        
+        // Return output
+        if let lowestValue = lowestValue {
+            return "\(lowestValue)"
+        } else {
+            return ""
+        }
+    }
+    
+    func puzzleTwoOutput(for input: Input) throws -> String {
+        let lines = try input.fileLines
+        
+        // TODO: Add puzzle logic
+        
+        return ""
+    }
+    
+    private func findLowestLocationForSeeds(_ seeds: [Int], in lines: [String]) -> Int? {
         // Parse input into seeds and maps
-        var seeds: [Int] = []
         var seedToSoilMaps: [Map] = []
         var soilToFertilizerMaps: [Map] = []
         var fertilizerToWaterMaps: [Map] = []
@@ -58,7 +82,7 @@ struct Day5 {
         
         for line in lines {
             if line.hasPrefix("seeds:") {
-                seeds = line.components(separatedBy: " ").dropFirst().compactMap(Int.init)
+                // no-op (seeds are now passed in)
             } else if line.hasPrefix("seed-to-soil") {
                 parsingSeedToSoil = true
             } else if line.hasPrefix("soil-to-fertilizer") {
@@ -130,19 +154,7 @@ struct Day5 {
             }
         }
         
-        if let lowestValue = lowestValue {
-            return "\(lowestValue)"
-        } else {
-            return ""
-        }
-    }
-    
-    func puzzleTwoOutput(for input: Input) throws -> String {
-        let lines = try input.fileLines
-        
-        // TODO: Add puzzle logic
-        
-        return ""
+        return lowestValue
     }
     
     private func mappedValue(for initialValue: Int, in maps: [Map]) -> Int {
