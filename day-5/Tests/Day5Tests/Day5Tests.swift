@@ -32,7 +32,7 @@ final class Day5Tests: XCTestCase {
         let output = try day5.puzzleTwoOutput(for: .example2)
         
         // Assert
-        XCTAssertEqual(output, "")
+        XCTAssertEqual(output, "46")
     }
     
     func testPuzzle2() throws {
@@ -43,6 +43,6 @@ final class Day5Tests: XCTestCase {
         let output = try day5.puzzleTwoOutput(for: .input)
         
         // Assert
-        XCTAssertEqual(output, "")
+        XCTAssertEqual(output, "9622622")
     }
 }

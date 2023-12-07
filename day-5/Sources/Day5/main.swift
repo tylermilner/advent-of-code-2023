@@ -57,9 +57,34 @@ struct Day5 {
     func puzzleTwoOutput(for input: Input) throws -> String {
         let lines = try input.fileLines
         
-        // TODO: Add puzzle logic
+        // Parse seeds
+        let firstLine = lines[0]
+        guard firstLine.starts(with: "seeds:") else { fatalError("Unable to parse seeds") }
+        let seedValues = firstLine.components(separatedBy: ":")[1].components(separatedBy: " ").compactMap(Int.init)
+        guard seedValues.count.isMultiple(of: 2) else { fatalError("Unbalanced number of seed values") }
         
-        return ""
+        var seeds: [Int] = []
+        var seedStart: Int?
+        
+        for seedValue in seedValues {
+            if let start = seedStart {
+                let seedRange = start..<(start + seedValue)
+                seeds.append(contentsOf: seedRange)
+                seedStart = nil
+            } else {
+                seedStart = seedValue
+            }
+        }
+        
+        // Get the lowest value
+        let lowestValue = findLowestLocationForSeeds(seeds, in: lines)
+        
+        // Return output
+        if let lowestValue = lowestValue {
+            return "\(lowestValue)"
+        } else {
+            return ""
+        }
     }
     
     private func findLowestLocationForSeeds(_ seeds: [Int], in lines: [String]) -> Int? {
@@ -181,12 +206,16 @@ do {
     let answerPuzzle1 = try day5.puzzleOneOutput(for: .input)
     print("Puzzle 1: \(answerPuzzle1)")
     
+#if DEBUG
+print("WARNING! Puzzle 2 is not performant when running in DEBUG mode. Run in release mode with `swift run -c release` to get puzzle 2 output.")
+#else
     // Puzzle 2
     let answerExample2 = try day5.puzzleTwoOutput(for: .example2)
     print("Example 2: \(answerExample2)")
     
     let answerPuzzle2 = try day5.puzzleTwoOutput(for: .input)
     print("Puzzle 2: \(answerPuzzle2)")
+#endif
 } catch {
     fatalError(error.localizedDescription)
 }
