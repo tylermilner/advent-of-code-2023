@@ -15,8 +15,9 @@ enum Card: Int, CaseIterable {
     case four = 4
     case three = 3
     case two = 2
+    case joker = 1
     
-    init?(character: Character) {
+    init?(character: Character, jokersEnabled: Bool = false) {
         switch character {
         case "A":
             self = .ace
@@ -24,8 +25,10 @@ enum Card: Int, CaseIterable {
             self = .king
         case "Q":
             self = .queen
-        case "J":
+        case "J" where !jokersEnabled:
             self = .jack
+        case "J" where jokersEnabled:
+            self = .joker
         case "T":
             self = .ten
         case "9":
@@ -59,7 +62,7 @@ enum HandType: Int {
     case onePair = 2
     case highCard = 1
     
-    init(cards: [Card]) {
+    init(cards: [Card], jokersEnabled: Bool = false) {
         var cardCounts: [Card: Int] = [:]
         
         for card in cards {
@@ -72,19 +75,59 @@ enum HandType: Int {
         if maxCount == 5 {
             self = .fiveOfAKind
         } else if maxCount == 4 {
-            self = .fourOfAKind
-        } else if maxCount == 3 {
-            if cardCounts.values.contains(2) {
-                self = .fullHouse
+            if jokersEnabled && cards.contains(.joker) {
+                self = .fiveOfAKind
             } else {
-                self = .threeOfAKind
+                self = .fourOfAKind
+            }
+        } else if maxCount == 3 {
+            if jokersEnabled && cards.contains(.joker) {
+                let jokerCount = cardCounts[.joker]
+                
+                if jokerCount == 3 && cardCounts.values.contains(2) {
+                    self = .fiveOfAKind
+                } else if jokerCount == 2 {
+                    self = .fiveOfAKind
+                } else {
+                    self = .fourOfAKind
+                }
+            } else {
+                if cardCounts.values.contains(2) {
+                    self = .fullHouse
+                } else {
+                    self = .threeOfAKind
+                }
             }
         } else if cardCounts.values.filter({ $0 == 2 }).count == 2 {
-            self = .twoPair
+            if jokersEnabled && cards.contains(.joker) {
+                let jokerCount = cardCounts[.joker]
+                
+                if jokerCount == 2 {
+                    self = .fourOfAKind
+                } else {
+                    self = .fullHouse
+                }
+            } else {
+                self = .twoPair
+            }
         } else if cardCounts.values.contains(2) {
-            self = .onePair
+            if jokersEnabled && cards.contains(.joker) {
+                let jokerCount = cardCounts[.joker]
+                
+                if jokerCount == 2 {
+                    self = .twoPair
+                } else {
+                    self = .threeOfAKind
+                }
+            } else {
+                self = .onePair
+            }
         } else {
-            self = .highCard
+            if jokersEnabled && cards.contains(.joker) {
+                self = .onePair
+            } else {
+                self = .highCard
+            }
         }
     }
 }
@@ -92,19 +135,21 @@ enum HandType: Int {
 struct Hand: Comparable {
     let cards: [Card]
     let bid: Int
+    let jokersEnabled: Bool
     
     var handType: HandType {
-        HandType(cards: cards)
+        HandType(cards: cards, jokersEnabled: jokersEnabled)
     }
     
-    init?(handString: String, bidString: String) {
-        let cards = handString.compactMap(Card.init)
+    init?(handString: String, bidString: String, jokersEnabled: Bool = false) {
+        let cards = handString.compactMap { Card(character:$0, jokersEnabled: jokersEnabled) }
         guard cards.count == handString.count else { return nil }
         
         guard let bid = Int(bidString) else { return nil }
         
         self.cards = cards
         self.bid = bid
+        self.jokersEnabled = jokersEnabled
     }
     
     static func < (lhs: Hand, rhs: Hand) -> Bool {
@@ -161,9 +206,30 @@ struct Day7 {
     func puzzleTwoOutput(for input: Input) throws -> String {
         let lines = try input.fileLines
         
-        // TODO: Add puzzle logic
+        var hands: [Hand] = []
         
-        return ""
+        for line in lines {
+            let handComponents = line.components(separatedBy: .whitespaces)
+            guard handComponents.count == 2 else { fatalError("Failed to parse hand components") }
+            
+            let handString = handComponents[0]
+            let bidString = handComponents[1]
+            
+            guard let hand = Hand(handString: handString, bidString: bidString, jokersEnabled: true) else { fatalError("Failed to parse hand") }
+            hands.append(hand)
+        }
+        
+        let sortedHands = hands.sorted()
+        
+        var winnings = 0
+        
+        for (index, hand) in sortedHands.enumerated() {
+            let rank = index + 1
+            let winAmount = rank * hand.bid
+            winnings += winAmount
+        }
+        
+        return "\(winnings)"
     }
 }
 
