@@ -1,14 +1,61 @@
 import AoCUtilities
 import Foundation
 
+struct ValueHistory {
+    let values: [Int]
+    
+    func extrapolateNextValue() -> Int {
+        return extrapolateNextValue(from: values)
+    }
+    
+    private func extrapolateNextValue(from values: [Int]) -> Int {
+        let lastValue = values[values.count - 1]
+        
+        if values.allSatisfy({ $0 == 0 }) {
+            return 0
+        } else {
+            let nextSequence = nextSequence(for: values)
+            return lastValue + extrapolateNextValue(from: nextSequence)
+        }
+    }
+    
+    private func nextSequence(for values: [Int]) -> [Int] {
+        var nextValues: [Int] = []
+        
+        for currentIndex in 0..<values.count {
+            let nextIndex = currentIndex + 1
+            
+            if nextIndex < values.count {
+                let difference = values[nextIndex] - values[currentIndex]
+                nextValues.append(difference)
+            }
+        }
+        
+        return nextValues
+    }
+}
+
 struct Day9 {
     
     func puzzleOneOutput(for input: Input) throws -> String {
         let lines = try input.fileLines
         
-        // TODO: Add puzzle logic
+        var valueHistories: [ValueHistory] = []
         
-        return ""
+        for line in lines {
+            let values = line.components(separatedBy: .whitespaces).compactMap(Int.init)
+            let valueHistory = ValueHistory(values: values)
+            valueHistories.append(valueHistory)
+        }
+        
+        var sum = 0
+        
+        for valueHistory in valueHistories {
+            let nextValue = valueHistory.extrapolateNextValue()
+            sum += nextValue
+        }
+        
+        return "\(sum)"
     }
     
     func puzzleTwoOutput(for input: Input) throws -> String {
