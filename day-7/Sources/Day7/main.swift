@@ -71,64 +71,151 @@ enum HandType: Int {
         }
         
         let maxCount = cardCounts.values.max()
+//        let jokerCount = cardCounts[.joker]
         
-        if maxCount == 5 {
-            self = .fiveOfAKind
-        } else if maxCount == 4 {
-            if jokersEnabled && cards.contains(.joker) {
+//        if let jokerCount = jokerCount, jokerCount > 0 && jokersEnabled {
+//            if jokerCount == 5 {
+//                self = .fiveOfAKind
+//            } else if jokerCount == 4 {
+//                self = .fiveOfAKind
+//            } else if jokerCount == 3 {
+//                if maxCount == 2 {
+//                    self = .fiveOfAKind
+//                } else {
+//                    self = .fourOfAKind
+//                }
+//            } else if jokerCount == 2 {
+//                if maxCount == 3 {
+//                    self = .fiveOfAKind
+//                } else if maxCount == 2 {
+//                    self = .fourOfAKind
+//                } else {
+//                    self = .threeOfAKind
+//                }
+//            } else if jokerCount == 1 {
+//                if maxCount == 4 {
+//                    self = .fiveOfAKind
+//                } else if maxCount == 3 {
+//                    self = .fourOfAKind
+//                } else if maxCount == 2 {
+//                    if cardCounts.values.filter({ $0 == 2 }).count == 2 {
+//                        self = .fullHouse
+//                    } else {
+//                        self = .threeOfAKind
+//                    }
+//                } else {
+//                    self = .onePair
+//                }
+//            } else {
+//                fatalError("Joker count should be > 0")
+//            }
+//        } else {
+        let jokerCount = cardCounts[.joker] ?? 0
+        
+            if maxCount == 5 {
                 self = .fiveOfAKind
-            } else {
-                self = .fourOfAKind
-            }
-        } else if maxCount == 3 {
-            if jokersEnabled && cards.contains(.joker) {
-                let jokerCount = cardCounts[.joker]
-                
-                if jokerCount == 3 && cardCounts.values.contains(2) {
+            } else if maxCount == 4 {
+                if jokersEnabled && jokerCount == 1 {
                     self = .fiveOfAKind
-                } else if jokerCount == 2 {
+                } else if jokersEnabled && jokerCount == 4 {
                     self = .fiveOfAKind
                 } else {
                     self = .fourOfAKind
                 }
-            } else {
-                if cardCounts.values.contains(2) {
+            } else if maxCount == 3 {
+                if jokersEnabled && jokerCount == 1 {
+                    self = .fourOfAKind
+                } else if jokersEnabled && jokerCount == 2 {
+                    self = .fiveOfAKind
+                } else if jokersEnabled && jokerCount == 3 {
+                    self = .fourOfAKind
+                } else if cardCounts.values.contains(2) {
                     self = .fullHouse
                 } else {
                     self = .threeOfAKind
                 }
-            }
-        } else if cardCounts.values.filter({ $0 == 2 }).count == 2 {
-            if jokersEnabled && cards.contains(.joker) {
-                let jokerCount = cardCounts[.joker]
-                
-                if jokerCount == 2 {
+            } else if cardCounts.values.filter({ $0 == 2 }).count == 2 {
+                if jokersEnabled && jokerCount == 1 {
+                    self = .fullHouse
+                } else if jokersEnabled && jokerCount == 2 {
                     self = .fourOfAKind
                 } else {
-                    self = .fullHouse
-                }
-            } else {
-                self = .twoPair
-            }
-        } else if cardCounts.values.contains(2) {
-            if jokersEnabled && cards.contains(.joker) {
-                let jokerCount = cardCounts[.joker]
-                
-                if jokerCount == 2 {
                     self = .twoPair
-                } else {
+                }
+            } else if cardCounts.values.contains(2) {
+                if jokersEnabled {
                     self = .threeOfAKind
+                } else {
+                    self = .onePair
                 }
             } else {
-                self = .onePair
+                if jokersEnabled {
+                    self = .onePair
+                } else {
+                    self = .highCard
+                }
             }
-        } else {
-            if jokersEnabled && cards.contains(.joker) {
-                self = .onePair
-            } else {
-                self = .highCard
-            }
-        }
+//        }
+        
+//        let maxCount = cardCounts.values.max()
+//        
+//        if maxCount == 5 {
+//            self = .fiveOfAKind
+//        } else if maxCount == 4 {
+//            if jokersEnabled && cards.contains(.joker) {
+//                self = .fiveOfAKind
+//            } else {
+//                self = .fourOfAKind
+//            }
+//        } else if maxCount == 3 {
+//            if jokersEnabled && cards.contains(.joker) {
+//                let jokerCount = cardCounts[.joker]
+//                
+//                if jokerCount == 3 && cardCounts.values.contains(2) {
+//                    self = .fiveOfAKind
+//                } else if jokerCount == 2 {
+//                    self = .fiveOfAKind
+//                } else {
+//                    self = .fourOfAKind
+//                }
+//            } else {
+//                if cardCounts.values.contains(2) {
+//                    self = .fullHouse
+//                } else {
+//                    self = .threeOfAKind
+//                }
+//            }
+//        } else if cardCounts.values.filter({ $0 == 2 }).count == 2 {
+//            if jokersEnabled && cards.contains(.joker) {
+//                let jokerCount = cardCounts[.joker]
+//                
+//                if jokerCount == 2 {
+//                    self = .fourOfAKind
+//                } else {
+//                    self = .fullHouse
+//                }
+//            } else {
+//                self = .twoPair
+//            }
+//        } else if cardCounts.values.contains(2) {
+//            if jokersEnabled && cards.contains(.joker) {
+//                let jokerCount = cardCounts[.joker]
+//                
+//                if jokerCount == 2 {
+//                    self = .twoPair
+//                } else {
+//                    self = .threeOfAKind
+//                }
+//            } else {
+//                self = .onePair
+//            }
+//        } else {
+//            if jokersEnabled && cards.contains(.joker) {
+//                self = .onePair
+//            } else {
+//                self = .highCard
+//            }
+//        }
     }
 }
 
@@ -249,6 +336,8 @@ do {
     
     let answerPuzzle2 = try day7.puzzleTwoOutput(for: .input)
     print("Puzzle 2: \(answerPuzzle2)")
+    // Not 249264092
+    // Not 250038797
 } catch {
     fatalError(error.localizedDescription)
 }
