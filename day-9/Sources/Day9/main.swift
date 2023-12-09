@@ -8,6 +8,10 @@ struct ValueHistory {
         return extrapolateNextValue(from: values)
     }
     
+    func extrapolatePreviousValue() -> Int {
+        return extrapolatePreviousValue(from: values)
+    }
+    
     private func extrapolateNextValue(from values: [Int]) -> Int {
         let lastValue = values[values.count - 1]
         
@@ -32,6 +36,17 @@ struct ValueHistory {
         }
         
         return nextValues
+    }
+    
+    private func extrapolatePreviousValue(from values: [Int]) -> Int {
+        let firstValue = values[0]
+        
+        if values.allSatisfy({ $0 == 0 }) {
+            return 0
+        } else {
+            let nextSequence = nextSequence(for: values)
+            return firstValue - extrapolatePreviousValue(from: nextSequence)
+        }
     }
 }
 
@@ -61,9 +76,22 @@ struct Day9 {
     func puzzleTwoOutput(for input: Input) throws -> String {
         let lines = try input.fileLines
         
-        // TODO: Add puzzle logic
+        var valueHistories: [ValueHistory] = []
         
-        return ""
+        for line in lines {
+            let values = line.components(separatedBy: .whitespaces).compactMap(Int.init)
+            let valueHistory = ValueHistory(values: values)
+            valueHistories.append(valueHistory)
+        }
+        
+        var sum = 0
+        
+        for valueHistory in valueHistories {
+            let previousValue = valueHistory.extrapolatePreviousValue()
+            sum += previousValue
+        }
+        
+        return "\(sum)"
     }
 }
 
