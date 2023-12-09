@@ -2,15 +2,26 @@ import XCTest
 @testable import Day8
 
 final class Day8Tests: XCTestCase {
-    func testExample1() throws {
+    func testExample1_1() throws {
         // Arrange
         let day8 = Day8()
         
         // Act
-        let output = try day8.puzzleOneOutput(for: .example1)
+        let output = try day8.puzzleOneOutput(for: .example1_1)
         
         // Assert
-        XCTAssertEqual(output, "")
+        XCTAssertEqual(output, "2")
+    }
+    
+    func testExample1_2() throws {
+        // Arrange
+        let day8 = Day8()
+        
+        // Act
+        let output = try day8.puzzleOneOutput(for: .example1_2)
+        
+        // Assert
+        XCTAssertEqual(output, "6")
     }
     
     func testPuzzle1() throws {
@@ -21,7 +32,7 @@ final class Day8Tests: XCTestCase {
         let output = try day8.puzzleOneOutput(for: .input)
         
         // Assert
-        XCTAssertEqual(output, "")
+        XCTAssertEqual(output, "16409")
     }
     
     func testExample2() throws {

@@ -13,7 +13,8 @@ let package = Package(
                     name: "Day8",
                     dependencies: ["AoCUtilities"],
                     resources: [
-                        .copy("Resources/inputs/example1.txt"),
+                        .copy("Resources/inputs/example1_1.txt"),
+                        .copy("Resources/inputs/example1_2.txt"),
                         .copy("Resources/inputs/example2.txt"),
                         .copy("Resources/inputs/input.txt"),
                     ]),
